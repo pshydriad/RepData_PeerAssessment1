@@ -2,7 +2,9 @@
 title: "Pedometer Analysis"
 author: "PeggySue Werthessen"
 date: "Sunday, May 17, 2015"
-output: html_document
+output:
+  html_document:
+    keep_md: yes
 ---
 
 This assignment is for the coursera class "Reproducable Research".  The assignment looks at a set of pedometer data but more importantly, it uses markdown to create a document which is going to be peer reviews.  This is that markdown.
@@ -39,13 +41,21 @@ Now, let's take a look at the histogram to see what kind of activity level our s
 hist(Steps_Per_Day$Total_Steps,breaks=10, col="darkblue", border="white",main="Number of Steps per Day", xlab="Total Steps")
 ```
 
-And over the total month, what is the mean, median and total number of steps?... easy.
+
+Reading through the peer review steps for the assignment... it is clear that we need to supply mean, median and sum of step for each individual day.
 
 ```{r, echo=TRUE}
-mean(Steps_Per_Day$Total_Steps)
-median(Steps_Per_Day$Total_Steps)
-sum(Steps_Per_Day$Total_Steps)
+Steps_Per_Day <- ddply(data,~date,summarise,Mean_Steps=mean(steps,na.rm=TRUE))
+
+Steps_Per_Day <- merge(Steps_Per_Day, ddply(data,~date,summarise,Median_Steps=median(steps,na.rm=TRUE)), by="date", all=TRUE)
+
+Steps_Per_Day <- merge(Steps_Per_Day, ddply(data,~date,summarise,Total_Steps=sum(steps,na.rm=TRUE)), by="date", all=TRUE)
+
+
+Steps_Per_Day
+
 ```
+
 
 ##What is the average daily activity pattern?
 

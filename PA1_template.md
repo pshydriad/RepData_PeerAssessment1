@@ -1,9 +1,6 @@
----
-title: "Pedometer Analysis"
-author: "PeggySue Werthessen"
-date: "Sunday, May 17, 2015"
-output: html_document
----
+# Pedometer Analysis
+PeggySue Werthessen  
+Sunday, May 17, 2015  
 
 This assignment is for the coursera class "Reproducable Research".  The assignment looks at a set of pedometer data but more importantly, it uses markdown to create a document which is going to be peer reviews.  This is that markdown.
 
@@ -43,6 +40,13 @@ First, I calculate the number of steps for each day in the data set while ignori
 ```r
 ##install.packages("plyr")
 library(plyr)
+```
+
+```
+## Warning: package 'plyr' was built under R version 3.1.3
+```
+
+```r
 Steps_Per_Day <- ddply(data,~date,summarise,Total_Steps=sum(steps,na.rm=TRUE))
 ```
 
@@ -53,34 +57,88 @@ Now, let's take a look at the histogram to see what kind of activity level our s
 hist(Steps_Per_Day$Total_Steps,breaks=10, col="darkblue", border="white",main="Number of Steps per Day", xlab="Total Steps")
 ```
 
-![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3-1.png) 
-
-And over the total month, what is the mean, median and total number of steps?... easy.
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
 
 
-```r
-mean(Steps_Per_Day$Total_Steps)
-```
+Reading through the peer review steps for the assignment... it is clear that we need to supply mean, median and sum of step for each individual day.
 
-```
-## [1] 9354.23
-```
 
 ```r
-median(Steps_Per_Day$Total_Steps)
+Steps_Per_Day <- ddply(data,~date,summarise,Mean_Steps=mean(steps,na.rm=TRUE))
+
+Steps_Per_Day <- merge(Steps_Per_Day, ddply(data,~date,summarise,Median_Steps=median(steps,na.rm=TRUE)), by="date", all=TRUE)
+
+Steps_Per_Day <- merge(Steps_Per_Day, ddply(data,~date,summarise,Total_Steps=sum(steps,na.rm=TRUE)), by="date", all=TRUE)
+
+
+Steps_Per_Day
 ```
 
 ```
-## [1] 10395
+##          date Mean_Steps Median_Steps Total_Steps
+## 1  2012-10-01        NaN           NA           0
+## 2  2012-10-02  0.4375000            0         126
+## 3  2012-10-03 39.4166667            0       11352
+## 4  2012-10-04 42.0694444            0       12116
+## 5  2012-10-05 46.1597222            0       13294
+## 6  2012-10-06 53.5416667            0       15420
+## 7  2012-10-07 38.2465278            0       11015
+## 8  2012-10-08        NaN           NA           0
+## 9  2012-10-09 44.4826389            0       12811
+## 10 2012-10-10 34.3750000            0        9900
+## 11 2012-10-11 35.7777778            0       10304
+## 12 2012-10-12 60.3541667            0       17382
+## 13 2012-10-13 43.1458333            0       12426
+## 14 2012-10-14 52.4236111            0       15098
+## 15 2012-10-15 35.2048611            0       10139
+## 16 2012-10-16 52.3750000            0       15084
+## 17 2012-10-17 46.7083333            0       13452
+## 18 2012-10-18 34.9166667            0       10056
+## 19 2012-10-19 41.0729167            0       11829
+## 20 2012-10-20 36.0937500            0       10395
+## 21 2012-10-21 30.6284722            0        8821
+## 22 2012-10-22 46.7361111            0       13460
+## 23 2012-10-23 30.9652778            0        8918
+## 24 2012-10-24 29.0104167            0        8355
+## 25 2012-10-25  8.6527778            0        2492
+## 26 2012-10-26 23.5347222            0        6778
+## 27 2012-10-27 35.1354167            0       10119
+## 28 2012-10-28 39.7847222            0       11458
+## 29 2012-10-29 17.4236111            0        5018
+## 30 2012-10-30 34.0937500            0        9819
+## 31 2012-10-31 53.5208333            0       15414
+## 32 2012-11-01        NaN           NA           0
+## 33 2012-11-02 36.8055556            0       10600
+## 34 2012-11-03 36.7048611            0       10571
+## 35 2012-11-04        NaN           NA           0
+## 36 2012-11-05 36.2465278            0       10439
+## 37 2012-11-06 28.9375000            0        8334
+## 38 2012-11-07 44.7326389            0       12883
+## 39 2012-11-08 11.1770833            0        3219
+## 40 2012-11-09        NaN           NA           0
+## 41 2012-11-10        NaN           NA           0
+## 42 2012-11-11 43.7777778            0       12608
+## 43 2012-11-12 37.3784722            0       10765
+## 44 2012-11-13 25.4722222            0        7336
+## 45 2012-11-14        NaN           NA           0
+## 46 2012-11-15  0.1423611            0          41
+## 47 2012-11-16 18.8923611            0        5441
+## 48 2012-11-17 49.7881944            0       14339
+## 49 2012-11-18 52.4652778            0       15110
+## 50 2012-11-19 30.6979167            0        8841
+## 51 2012-11-20 15.5277778            0        4472
+## 52 2012-11-21 44.3993056            0       12787
+## 53 2012-11-22 70.9270833            0       20427
+## 54 2012-11-23 73.5902778            0       21194
+## 55 2012-11-24 50.2708333            0       14478
+## 56 2012-11-25 41.0902778            0       11834
+## 57 2012-11-26 38.7569444            0       11162
+## 58 2012-11-27 47.3819444            0       13646
+## 59 2012-11-28 35.3576389            0       10183
+## 60 2012-11-29 24.4687500            0        7047
+## 61 2012-11-30        NaN           NA           0
 ```
 
-```r
-sum(Steps_Per_Day$Total_Steps)
-```
-
-```
-## [1] 570608
-```
 
 ##What is the average daily activity pattern?
 
@@ -96,7 +154,7 @@ Avg_Steps_Per_Interval <- ddply(data,~interval,summarise,Avg_Steps=mean(steps,na
 plot(Avg_Steps_Per_Interval$interval, as.numeric(Avg_Steps_Per_Interval$Avg_Steps), type = "l", xlab="5 Minute Interval", ylab="Avg # Steps Across All Days", main="Typical Daily Activity Pattern")
 ```
 
-![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
 
 Which interval is the most active of all?
 
@@ -149,7 +207,7 @@ I_Steps_Per_Day <- ddply(I_data,~date,summarise,Total_Steps=sum(steps,na.rm=TRUE
 hist(I_Steps_Per_Day$Total_Steps,breaks=10, col="darkblue", border="white",main="Number of Steps per Day in IMPUTED Data", xlab="Total Steps")
 ```
 
-![plot of chunk unnamed-chunk-9](figure/unnamed-chunk-9-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-9-1.png) 
 
 
 And for reference ... here is the original histogram...
@@ -160,7 +218,7 @@ And for reference ... here is the original histogram...
 hist(Steps_Per_Day$Total_Steps,breaks=10, col="darkblue", border="white",main="Number of Steps per Day", xlab="Total Steps")
 ```
 
-![plot of chunk unnamed-chunk-10](figure/unnamed-chunk-10-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-10-1.png) 
 
 
 **Looking at the original histogram, I think our imputed data over inflates activity during certain times...We can see the high activity at the beginning of the day (after midnight)  But this was probably a small number of occurrances of late night activity which later got applied to all days.... in hindsight, it might have been better to just fill the NAs in with zeros.... live and learn.
@@ -267,7 +325,13 @@ I_Avg_Steps_Per_Interval <- ddply(I_data, .(interval,daytype),summarise,Avg_Step
 
 ##install.packages("ggplot2")
 library(ggplot2)
+```
 
+```
+## Warning: package 'ggplot2' was built under R version 3.1.3
+```
+
+```r
 ggplot(data=I_Avg_Steps_Per_Interval, aes(x=interval, y=Avg_Steps, group=daytype, colour=daytype)) +
     ggtitle("Activity Profile in 5 minute increments - weekdays vs weekends") +
     geom_line() +
@@ -275,7 +339,7 @@ ggplot(data=I_Avg_Steps_Per_Interval, aes(x=interval, y=Avg_Steps, group=daytype
     facet_wrap(~daytype, nrow=2)
 ```
 
-![plot of chunk unnamed-chunk-14](figure/unnamed-chunk-14-1.png) 
+![](PA1_template_files/figure-html/unnamed-chunk-14-1.png) 
 
 It looks like our subject likes to sleep in a little later on the weekends and the spike during the weekdays probably corresponds to their commute.
 
